@@ -5,7 +5,15 @@ const cardObjectDefinitions = [
     {id:4, imagePath: '/images/TrapCard.jpg'}
 ]
 
+
 const cardBackImgPath = '/images/NeutralRuby.jpg'
+
+let cards = []
+
+const playGameButtonElem = document.getElementById('playGame')
+
+const collapsedGridAreaTemplate = '"a a" "a a'
+const cardCollectionCellClass = ".card-pos-a"
 
 const cardContainerElem = document.querySelector('.card-container')
 
@@ -25,11 +33,65 @@ const cardContainerElem = document.querySelector('.card-container')
         function loadGame(){
             createCards()
 
+            cards = document.querySelectorAll('.card')
+
+            playGameButtonElem.addEventListener('click', ()=>startGame())
+
         }
+    
         function startGame(){
+           initalizeNewGame()
+           startRound()
+
+            alert('')
+        }
+
+        function initalizeNewGame(){
 
         }
 
+        function startRound(){
+            initalizeNewRound()
+            collectCards()
+            flipCards(true)
+        }
+        function initalizeNewRound(){
+        
+        }
+
+        function collectCards(){
+            transformGridArea(collapsedGridAreaTemplate)
+            addCardsToGridAreaCell(cardCollectionCellClass)
+
+        }
+        function transformGridArea(areas){
+            cardContainerElem.style.gridTemplateAreas = areas
+        }
+        function addCardsToGridAreaCell(cellPositionClassName){
+            const cellPositionElem = document.querySelector(cellPositionClassName)
+            cards.forEach((card, index) =>{
+                    addChildElement(cellPositionElem, card)
+            })
+        }
+        function flipCard(card, flipToBack){
+            const innerCardElem = card.firstChild
+            if(flipToBack && !innerCardElem.classList.contains('flip-it'))
+            {
+                innerCardElem.classList.add('flip-it')
+            }
+            else if(innerCardElem.classList.contains('flip-it'))
+            {
+            innerCardElem.classList.remove('flip-it')
+            }
+        }
+        function flipCards(flipToBack){
+            cards.forEach((card, index)=>{
+                setTimeout(() => {
+                    flipCard(card,flipToBack)
+                }, index * 100)
+
+            })
+        }
         function createCards()
         {
             cardObjectDefinitions.forEach((cardItem)=>{
