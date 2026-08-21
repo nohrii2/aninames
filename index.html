@@ -7,23 +7,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
-    <link href='https://fonts.googleapis.com/css?family=League Spartan' rel='stylesheet'>
+    <link href='https://fonts.googleapis.com/css?family=League Spartan' rel='stylesheet'> 
     
     
 </head>
-<style>
-h1 {font-family:'League Spartan'; color: rgb(255, 87, 87);   text-align: center;}
-.header-button-container {font-family:'League Spartan'; text-align: center;}
-</style>
 
-<body>
+<style>
+h1 {font-family:'League Spartan'; 
+    width: 320px;
+    background-color: #ff5757;
+    color: rgb(255, 243, 194);  
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 0;
+    margin: 0 auto;
+    }
+    
+.header-button-container {text-align: center;}
+.play-game {font-family:'League Spartan';
+ background-color:#ff5757;
+ color: rgb(255, 243, 194);
+margin-top: 15px;
+margin-bottom: 15px;}
+
+
+</style>
+<body style="background-color: rgb(255, 243, 194); 
+background-image:  radial-gradient(#ff5757 1.5px, transparent 1.5px), radial-gradient(rgb(255, 243, 194));
+background-size: 20px 20px;
+background-position: 0 0,10px 10px;">
     <header>
         <div class="header-title-container">
             <h1> aninames </h1> 
         </div>
         <div class="header-button-container">
             <div class="game-play-button-container">
-                <button id="playGame" class="play-game"> Play Game </button>
+                <input class="textbox" type="textbox">  <button id="playGame" class="play-game"> hint </button>
             </div> 
 
         </div>

@@ -1,9 +1,12 @@
+
+
 :root{
     --card-width:100px;
     --card-height:60px;
     --num-cards:4;
     --card-horizontal-space: 20px
 }
+
 body{
     height: 50vh;
     
@@ -13,7 +16,8 @@ main{
     height: 55%;
     display: flex;
     justify-content: center;
-    border: 1px solid black;
+    border: 1px transparent black;
+    /*it is hiding ^ */
 }
 .card-container{
     position: relative; 
@@ -24,7 +28,8 @@ main{
     grid-template-rows: 1fr 1fr;
     grid-template-areas: "a b"
                          "c d";
-    border: 1px solid black;
+    border: 5px solid #ff5757;
+    background-color: #FBEBD8;
 }
 
 .card-pos-a{
@@ -87,3 +92,5 @@ main{
 .card-inner.flip-it{
     transform: rotateY(180deg);
 }
+
+

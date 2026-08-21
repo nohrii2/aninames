@@ -110,7 +110,7 @@ let cardPositions = []
             {
                 randomizeCardPositions()
 
-                if(shuffleCount == 500)
+                if(shuffleCount == 100)
                 {
                     clearInterval(id)
                     
