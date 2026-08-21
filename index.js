@@ -4,8 +4,11 @@ const cardObjectDefinitions = [
     {id:3, imagePath: '/images/RedTeamKana.jpg'},
     {id:4, imagePath: '/images/TrapCard.jpg'}
 ]
+//code was broken because i had deleted a flavor text that the code was constantly trying to modify, but the actual mechanisms would function fine as long as i cleaved the entire thing :))))
 
- //50:54 in video, "deal cards"
+
+const aceId = 4
+
 const cardBackImgPath = '/images/NeutralRuby.jpg'
 
 let cards = []
@@ -21,8 +24,27 @@ const numCards = cardObjectDefinitions.length
 
 let cardPositions = [] 
 
+let gameInProgress = false
+let shufflingInProgress = false
+let cardsRevealed = false
 
-    {/*   <div class="card">
+//updateStatusElement(currentGameStatusElem, "block", winColor, "Correct!")
+
+
+const scoreContainerElem = document.querySelector('.header-score-container')
+const scoreElem = document.querySelector('.score')
+const roundContainerElem = document.querySelector('.header-round-container')
+const roundElem = document.querySelector('.round')
+
+const winColor = "green"
+const loseColor = "red"
+const primaryColor = roundContainerElem.style.color
+
+let roundNum = 0 
+let maxRounds = 4
+let score = 0
+
+    /*   <div class="card">
         <div class="card-inner">
                 <div class="card-front">
                     <img src="/images/BlueTeamAkane.jpg" alt="" class="card-img">
@@ -31,30 +53,142 @@ let cardPositions = []
                     <img src="/images/NeutralRuby.jpg" alt="" class="card-img">
                 </div>
             </div>
-            </div> */}
+            </div> */
 
         loadGame()
+        function gameOver()
+        {
+        updateStatusElement(scoreContainerElem,"none")
+        updateStatusElement(roundContainerElem,"none")
+
+        const gameOverMessage = `Game Over!' <span class ='badge'> ${score} </span>
+                                Click to give another hint!`
+    
+
+        gameInProgress = false
+        playGameButtonElem.disabled = false
+        }
+        function endRound()
+        {
+            setTimeout(()=>{
+                    if(roundNum == maxRounds)
+                    {
+                    gameOver()
+                    return
+                    }
+                    else
+                    {
+                    startRound()
+                    }
+            },3000)
+        }
+        function chooseCard(card)
+        {
+            if(canChooseCard())
+            {
+                evaluateCardChoice(card)
+                flipCard(card,false)
+                
+                setTimeout (()=>{
+                    flipCards(false)
+                },3000)
+                cardsRevealed = true
+
+              
+            }
+        }
+
+        function calculateScoreToAdd(roundNum)
+        {
+            if(roundNum == 1)
+            {
+                return 100
+            }
+            else if(roundNum == 2)
+            {
+                return 50
+            }
+            else if(roundNum == 3)
+            {
+                return 25
+            }
+            else if(roundNum == 4)
+            {
+                return 10
+            }
+            else
+            {return 10}
+        }
+        function calculateScore()
+        {
+            const scoreToAdd = calculateScoreToAdd(roundNum)
+            score = score + scoreToAdd
+        }
+        function updateScore()
+        {
+            calculateScore()
+        }
+        
+        function updateStatusElement(elem, display, color, innerHTML)
+        {
+        elem.style.display = display
+       
+        if(arguments.length > 2)
+            {
+            elem.style.color = color
+            elem.innerHTML = innerHTML
+            }
+        }
+
+    
+        function evaluateCardChoice(card)
+        {
+            if(card.id == aceId)
+            {
+                updateScore()
+                outputChoiceFeedback(true)
+            }
+            else
+            {
+                outputChoiceFeedback(false)
+            }
+        }
+        function canChooseCard()
+        {
+            return gameInProgress == true && !shufflingInProgress && !cardsRevealed
+        }
 
         function loadGame(){
             createCards()
 
             cards = document.querySelectorAll('.card')
 
+            updateStatusElement(scoreContainerElem,"none")
+            updateStatusElement(roundContainerElem,"none")
             playGameButtonElem.addEventListener('click', ()=>startGame())
 
         }
-    
+
         function startGame(){
            initalizeNewGame()
            startRound()
-
         }
 
         function initalizeNewGame(){
+            score = 0
+            roundNum = 0
 
+            shufflingInProgress = false
+
+            updateStatusElement(scoreContainerElem, "flex")
+            updateStatusElement(roundContainerElem, "flex")
+            //header-score-container.style.color + every time
+            updateStatusElement(scoreElem, "block", primaryColor, `Score <span class ='badge'>${score}</span>`)
+            updateStatusElement(roundElem, "block", primaryColor, `Round <span class ='badge'>${roundNum}</span>`)
         }
 
-        function startRound(){
+        function startRound()
+        {
             initalizeNewRound()
             collectCards()
             flipCards(true)
@@ -62,7 +196,14 @@ let cardPositions = []
         }
 
         function initalizeNewRound(){
+        roundNum++ 
+        playGameButtonElem.disabled = true
         
+        gameInProgress = true
+        shufflingInProgress = true
+        cardsRevealed = false
+
+        updateStatusElement(roundElem, "block", primaryColor, `Round <span class ='badge'>${roundNum}</span>`)
         }
 
         function collectCards(){
@@ -103,8 +244,9 @@ let cardPositions = []
 
         function shuffleCards()
         {
-            const id = setInterval(shuffle, 12)
+            
             let shuffleCount = 0
+            const id = setInterval(shuffle, 12)
 
             function shuffle()
             {
@@ -113,7 +255,7 @@ let cardPositions = []
                 if(shuffleCount == 100)
                 {
                     clearInterval(id)
-                    
+                    shufflingInProgress = false
                     dealCards()
                 }
             
@@ -249,7 +391,11 @@ function createCard(cardItem){
     addCardToGridCell(cardElem)
 
     initializeCardPositions(cardElem)
+    attachClickEventHandlerToCard(cardElem)
 
+}
+function attachClickEventHandlerToCard(card){
+    card.addEventListener('click', () => chooseCard(card))
 }
 
 function initializeCardPositions(card)
